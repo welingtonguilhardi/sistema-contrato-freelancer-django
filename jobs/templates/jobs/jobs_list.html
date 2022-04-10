@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'head' %}
+<link rel="stylesheet" href="{% static 'jobs/encontrar_jobs.css' %}">
+{% endblock %}
+
+{% block 'body' %}
+
+{% if user.is_superuser %}
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm">
+            <form action="{% url 'all' %}" method="GET"> 
+            
+            <div class="col-sm">
+            <select class="form-control" name="categoria">
+            <option value="D">Design</option>
+            <option value="EV">Edição de vídeo</option>
+            </select>
+            <br>
+            <select class="form-control" name="status">
+                <option value="C">Em criação</option>
+                <option value="AA">Aguardando Aorovação</option>
+                <option value="F">Finalizado</option>
+            </select>
+            <br>
+            <input type="submit" class="btn btn-success btn-lg" value="FILTRAR">
+            </form>
+        </div>
+            </div>
+            </div>
+        <br>
+        <br>
+        <h2 class="titulo">TODOS JOB’S:</h2>
+        <div class="row justify-content-around">
+        {% for job in object_list %}
+            <div class="col-6 row-card">
+                <div class="card-job">
+                    <div class="header-job">
+                    <h4 class="titulo-job">{{job.titulo}}</h4>
+                    </div>
+                    <div class="body-job">
+                        <p class="titulo-body">Descrição:</p>
+                        <div style="max-width: 70%">
+                            <p>{{job.descricao}}</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="titulo-body">Preço:</p>
+                                <p>{{job.preco}}</p>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="titulo-body">Prazo:</p>
+                                <p>{{job.prazo_entrega}}</p>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="titulo-body">Categoria:</p>
+                                <p>{% if job.categoria == 'D'%}
+                                        Design
+                                    {% else %}
+                                        Edição de vídeo
+                                    {% endif%}
+                                
+                                </p>
+                            </div>
+                            <div class="col-4">
+                                <p class="titulo-body">Status:</p>
+                                <p>{% if job.status == 'C'%}
+                                        Em criação
+                                    {% endif %}
+                                    {% if job.status == 'AA'%}
+                                        Aguardando aprovação
+                                    {% endif %}
+                                    {% if job.status == 'F'%}
+                                        Finalizado
+                                    {% endif %}                                   
+                                
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-success"data-toggle="modal" data-target="#modal-{{job.id}}" >Ver detalhes</button>
+                        <br>
+                        <br>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal fade" id="modal-{{job.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> <!-- o id={{job.id}} define que cada modal pegará o id para exibir as informações -->
+                <div class="modal-dialog" role="document">
+                    <div style="background-color: #333;" class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title job-modal-titulo" id="exampleModalLabel">JOB:</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <h4 class="titulo-job">{{job.titulo}}</h4>
+                                
+                                <h6 class="titulo-body">Descrição:</h6>
+            
+                                <p>{{job.descricao}}</p>
+            
+                                <div class="row">
+            
+                                    <div class="col-4">
+            
+                                        <h6 class="titulo-body">Preço:</h6>
+            
+                                        <p>{{job.preco}}</p>
+            
+                                    </div>
+            
+                                    <div class="col-4">
+            
+                                        <h6 class="titulo-body">Prazo:</h6>
+            
+                                        <p>{{job.prazo_entrega}}</p>
+            
+                                    </div>
+            
+                                    <div class="col-4">
+            
+                                        <h6 class="titulo-body">Categoria:</h6>
+            
+                                        <p>{{job.prazo_entrega}}</p>
+            
+                                    </div>
+            
+                                    
+            
+                                </div>
+            
+                                <h4 style="display:inline;" class="job-modal-titulo">Referencias:</h4>
+                                <br>
+                                <br>
+                                <div class="row">
+            
+                                    
+                                        <div class="col-4">
+                                            <img src="/media/{{job.arquivo}}" width="100%"> 
+                                        
+            
+                                        </div>
+                                    
+            
+                                    
+            
+                                </div>
+                                <br>
+                                <br>
+                                <a href="{% url 'update' job.id %}" class="btn btn-success btn-lg">Atualizar JOB</a> <!-- o job.id será responsavel por passar o id so job desejado para o url -->
+            
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <h1>Olá {{user.username}}</h1>
+    <h3>Seu acesso foi negado</h3>
+{% endif %}
+{% endblock %}

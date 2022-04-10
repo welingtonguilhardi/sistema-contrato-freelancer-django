@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ {% if user.is_superuser %}
+    {% load bootstrap %}
+    
+    {% block content %}
+        <div class="container">
+            <h1>Adicionar um Job</h1>
+            <div>
+                <form action="." method="POST"enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|bootstrap }}
+                    <br>
+                    <input type="submit" class="btn btn-default" value="Criar">
+                </form>
+                
+            </div>
+        </div>
+    {% endblock %}
+    {% else %}
+         <h1>Olá {{user.username}}</h1>
+         <h3>Seu acesso foi negado</h3>
+ {% endif %}
+</body>
+</html>
